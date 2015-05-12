@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function (){
+        document.querySelector('button').addEventListener('click', function (){
+
+          var form = document.forms.user;
+
+          var jsonData = {
+            name: form.name.value,
+            email: form.email.value
+          };
+
+         /* var xhr = new XMLHttpRequest();
+          xhr.open('post', '/contacts');
+          xhr.setRequestHeader('accept', 'application/json');
+          xhr.setRequestHeader('content-type', 'application/json');
+          xhr.send(JSON.stringify(jsonData));*/
+
+          //ajax(JSON.stringify(jsonData), 'application/json');
+
+          //generate form URL encoded string from json
+
+          ajax( jsonToFormUrlEncoded(jsonData), 'application/x-www-form-urlencoded');
+          //ajax(xmlString, 'application/xml');   // todo :send as xml
+        });
+      });
+
+      function jsonToFormUrlEncoded(obj){
+        return Object.keys(obj).map(function (prop){
+          return encodeURIComponent(prop) + '=' + encodeURIComponent(obj[prop])
+        }).join('&');
+      }
+
+      function ajax(str, contentType){
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', '/contacts');
+        xhr.setRequestHeader('accept', 'application/json');
+        xhr.setRequestHeader('content-type', contentType);
+        xhr.send(str);
+      }
+
+    </script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+
+
+    <form name="user" action="/contacts" method="post">
+      <input type="text" name="name" placeholder="name"/>
+      <input type="email" name="email" placeholder="email"/>
+      <input type="submit" value="Submit"/>
+    </form>
+
+    <button>Make Ajax Call</button>
+  </body>
+</html>
