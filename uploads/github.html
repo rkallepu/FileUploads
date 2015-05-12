@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        var xhr = new XMLHttpRequest();
+        var start, intervals = [];
+
+        console.log(xhr.readyState);
+
+        xhr.timeout = 300;
+        // write code that checks the support for timeout in chrome in firefox
+
+        xhr.addEventListener('readystatechange', function (){   //older version: xhr.onreadystatechange = function (){ ]
+            console.log(xhr.readyState);
+
+            switch(xhr.readyState){
+                case 2:
+                    intervals.push((new Date())- start);
+                    console.log('Cumulative time till 2, status, header ', intervals[0]);
+                    break;
+                case 4:
+                    intervals.push((new Date())- start - intervals[0]);
+                    console.log(intervals)
+                    console.log('Cumulative time till 4, received all: ', (new Date())-start);
+                    break;
+            }
+           /* if(xhr.readyState > 2){
+                console.log(xhr.responseText.length);
+            }*/
+        });
+
+        xhr.addEventListener('timeout', function (){
+           console.log('Request Aborted: Request exceeded time: ', xhr.timeout, 'ms');
+        });
+
+
+        xhr.open('get','https://api.github.com/search/repositories?q=cassandra');
+        start = new Date();
+        xhr.send();
+    </script>
+</head>
+<body>
+
+</body>
+</html>
