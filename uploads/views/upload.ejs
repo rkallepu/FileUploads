@@ -9,18 +9,33 @@
             formData.append("name", "Rashmika");
            var input = document.querySelector('input');
             input.addEventListener('change', function(){
-                var file = this.files[0];
+                //var files = this.files;
+                var files = Array.prototype.slice.call(this.files);
                 var xhr = new XMLHttpRequest();
                 xhr.open('post', '/upload');
-                formData.append('image', file);
+                files.forEach(function (index, file){
+                    formData.append('file', index + file);
+                })
+               /* for(var i =0; i < files.length; i++){
+                    formData.append('image' + i, files[i]);
+                }*/
                 xhr.send(formData);
+                var progressbar = document.querySelector('progress');
+                xhr.upload.addEventListener('progress', function (event){
+                    var progressVal = event.loaded/event.total;
+                    console.log(progressVal);
+                    progressbar.setAttribute('value', progressVal * 100);
+                });
             });
+
         });
     </script>
 </head>
 <body>
 <form action="/upload" method="post">
     <input type="file" multiple />
+    <progress value="0" max="100">
+    </progress>
     <!--<input type="submit" />-->
 </form>
 </body>
